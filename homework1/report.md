@@ -168,3 +168,100 @@ $ .\ackermann.exe
 
 本次作業成功展示了 Ackermann 函式 在 遞迴 與 手寫堆疊 兩種不同實作方式下的等價性與正確性，並透過 功能測試、效能分析、限制說明 完整闡述了演算法的特性。
 雖然 Ackermann 本身在實務上僅作為 遞迴概念的極限範例，但透過本次實作，我更加熟悉了 遞迴 → 堆疊的思考轉換，以及管理 程式記憶體 與 呼叫深度 的技巧
+
+
+作業二
+## Power‑Set 生成
+## 解題說明
+
+### 問題二：Power Set 生成
+
+給定一個大小為 n 的集合 S = {s₀ , s₁ , … , sₙ₋₁}，要求列舉出 S 的全部子集合（即 Power‑Set）。
+
+```
+S = {a, b, c}
+Power‑Set(S) = { {}, {a}, {b}, {c},
+                {a,b}, {a,c}, {b,c},
+                {a,b,c} }
+```
+遞迴實作：以「是否選擇」的 0/1 決策方式（Decrease‑and‑Conquer）寫出 generatePowerSet。
+
+### 解題策略
+
+| 步驟 | 目的 |實作方式|
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 決策樹建構   | 每個元素 sᵢ 必須決定 「不選」(0) 或 「選」(1)。     |在遞迴 generatePowerSet(arr, used, n, idx) 中，idx 表示當前正在決策第 idx 個元素。|
+| 0/1 記錄   | 用布林陣列 used[i] 保存本輪的選擇。     |used[i]=false → 不取； used[i]=true → 取。|
+| 葉節點輸出     | 當所有 n 個決策完成 (idx == n) 時，把 used 轉成子集合字串印出。     |printSubset 逐一檢查 used[i]，把被選的 arr[i] 放入 { … }。|
+| 葉節點輸出     | 兩條分支（不選 / 選）在每層遞迴都執行，形成深度為 n、寬度為 2 的完整二叉遞迴樹，葉子數正好是 2ⁿ。   |只要遞迴呼叫一次 generatePowerSet(arr, used, n, 0) 即可。|
+
+## 程式實作
+Power‑Set 
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+constexpr int MAX_N = 64;          
+
+void printSubset(const string arr[], const bool used[], int n)
+{
+    cout << "{ ";
+    bool first = true;
+    for (int i = 0; i < n; ++i) {
+        if (used[i]) {
+            if (!first) cout << ", ";
+            cout << arr[i];
+            first = false;
+        }
+    }
+    cout << " }" << endl;
+}
+
+void generatePowerSet(const string arr[], bool used[], int n, int idx)
+{
+    if (idx == n) {                 
+        printSubset(arr, used, n);
+        return;
+    }
+
+    /* 不選第 idx 個元素 */
+    used[idx] = false;
+    generatePowerSet(arr, used, n, idx + 1);
+
+    /* 選第 idx 個元素 */
+    used[idx] = true;
+    generatePowerSet(arr, used, n, idx + 1);
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cout << "請輸入集合的元素個數 (0~" << MAX_N << "): ";
+    if (!(cin >> n) || n < 0 || n > MAX_N) {
+        cerr << "錯誤：請輸入合法的非負整數且不超過上限。" << endl;
+        return -1;
+    }
+
+    string arr[MAX_N];
+    bool   used[MAX_N] = { false };    
+
+    cout << "請依序輸入 " << n << " 個元素（以空白或換行分隔）:" << '\n';
+    for (int i = 0; i < n; ++i) {
+        if (!(cin >> arr[i])) {
+            cerr << "讀取元素失敗。" << endl;
+            return -1;
+        }
+    }
+
+    cout << "\n=== Power Set (遞迴 0/1 決策) ===\n";
+    generatePowerSet(arr, used, n, 0);
+    return 0;
+}
+```
+## 效能分析
+
