@@ -14,37 +14,67 @@ A(m, n) = {
 }
 
 ```
-由於增長速度極快，只接受小範圍測試（如 m≤3、n≤4）才不會因堆疊或記憶體耗盡而失敗。
+- 特性:由於增長速度極快，只接受小範圍測試（如 m≤3、n≤4）才不會因堆疊或記憶體耗盡而失敗。
+- 本作業要求:
+1. 實作 遞迴版（直接對照數學定義）。
+2. 實作 迭代版，以手寫 堆疊 模擬遞迴，避免系統呼叫堆疊的深度限制。
 
 ### 解題策略
 
-1. 使用遞迴函式將問題拆解為更小的子問題：
-   $$\Sigma(n) = n + \Sigma(n-1)$$
-2. 當 $n \leq 1$ 時，返回 $n$ 作為遞迴的結束條件。  
-3. 主程式呼叫遞迴函式，並輸出計算結果。
+1. 遞迴實作:直接映射定義，最簡潔的解法。
+2. 迭代實作（手寫堆疊）:避免系統呼叫堆疊深度限制，讓程式自行管理深度。
 
 ## 程式實作
 
 以下為主要程式碼：
-
+1. 遞迴版
 ```cpp
 #include <iostream>
 using namespace std;
 
-int sigma(int n) {
-    if (n < 0)
-        throw "n < 0";
-    else if (n <= 1)
-        return n;
-    return n + sigma(n - 1);
-}
-
-int main() {
-    int result = sigma(3);
-    cout << result << '\n';
+   
+long long ackermannRec(int m, int n)
+{
+    if (m == 0) return n + 1;
+    if (n == 0) return ackermannRec(m - 1, 1);
+    return ackermannRec(m - 1,
+        ackermannRec(m, n - 1));
 }
 ```
+2. 迭代版 – 手寫堆疊模擬遞迴
+```
+long long ackermannItr(int m, int n)
+{
+    const int MAX_STK = 100000;         
+    int *stk = new int[MAX_STK];        
+    int top = -1;                        
 
+    while (true)
+    {
+        if (m == 0)                      // 基本情形 A(0,n) = n+1
+        {
+            n = n + 1;
+            if (top < 0) break;          
+            m = stk[top--];              // 彈回上一層的 m
+        }
+        else if (n == 0)                 // A(m,0) = A(m-1,1)
+        {
+            n = 1;
+            m = m - 1;
+        }
+        else                             // A(m,n) = A(m-1, A(m,n-1))
+        {
+            stk[++top] = m - 1;           // 把外層的 m-1 暫存
+            n = n - 1;                    // 先算內層 A(m,n-1)
+            // m 保持不變，下一輪迴圈會再次判斷
+        }
+    }
+
+    delete[] stk;
+    return n;                            // 最終的 n 即 A(m0,n0)
+}
+
+```
 ## 效能分析
 
 1. 時間複雜度：程式的時間複雜度為 $O(\log n)$。
