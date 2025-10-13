@@ -43,6 +43,10 @@ long long ackermannRec(int m, int n)
 ```
 2. 迭代版 – 手寫堆疊模擬遞迴
 ```
+#include <iostream>
+using namespace std;
+
+
 long long ackermannItr(int m, int n)
 {
     const int MAX_STK = 100000;         
