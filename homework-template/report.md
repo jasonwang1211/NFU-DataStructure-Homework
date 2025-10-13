@@ -42,7 +42,7 @@ long long ackermannRec(int m, int n)
 }
 ```
 2. 迭代版 – 手寫堆疊模擬遞迴
-```
+```cpp
 #include <iostream>
 using namespace std;
 
