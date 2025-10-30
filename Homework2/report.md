@@ -206,4 +206,4 @@ $start = Get-Date
 $elapsed = (Get-Date) - $start
 Write-Host "Multiplying two 1000‑term polynomials took $($elapsed.TotalMilliseconds) ms"
 ```
-在我的機器上跑出 約 180 ms（O(t₁·t₂) = 10⁶ 次乘法），與理論時間相符。
+>在我的機器上跑出 約 180 ms（O(t₁·t₂) = 10⁶ 次乘法），與理論時間相符。
