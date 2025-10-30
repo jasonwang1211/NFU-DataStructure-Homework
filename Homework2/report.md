@@ -183,11 +183,10 @@ q(2) = -4
 (p*q)(2) = -28.48
 ```
 
-檢查點：
-
-terms 數量正確（p 有 3 項、q 有 2 項）。
-輸出形式符合課程要求（係數 1 省略、指數 0 只印係數、指數 1 省略 ^1）。
-Eval 結果與手算一致。
+>檢查點：
+>terms 數量正確（p 有 3 項、q 有 2 項）。
+>輸出形式符合課程要求（係數 1 省略、指數 0 只印係數、指數 1 省略 ^1）。
+>Eval 結果與手算一致。
 
 ## 效能量測
 ```shell
@@ -207,3 +206,14 @@ $elapsed = (Get-Date) - $start
 Write-Host "Multiplying two 1000‑term polynomials took $($elapsed.TotalMilliseconds) ms"
 ```
 >在我的機器上跑出 約 180 ms（O(t₁·t₂) = 10⁶ 次乘法），與理論時間相符。
+### 心得討論
+
+1. 資料結構設計
+- 使用 動態陣列 而非 std::vector（題目不允許）讓我必須自行管理 容量擴充、記憶體釋放。這對於了解「Rule of Three」非常有幫助。
+2. 演算法效率
+- 加法線性、乘法二次，這正是多項式運算的理論下界。若未來要處理 稀疏 或 高次 多項式，可改用 hash map（std::unordered_map<int,float>）或 二分搜尋 在 insertTerm 中加速合併，將乘法的常數降低。
+3. 測試策略
+- 手動互動測試快速驗證功能正確；檔案重導與 PowerShell 批次腳本則能一次跑多組測資，便於在 GitHub Action 中自動化。
+4. 未來改進
+- 若允許使用 STL，std::vector<Term> + std::sort 能讓程式更簡潔。
+- 在 Mult 中可先利用 稀疏合併（把產生的項目暫存於 std::map<int,float>）再一次性寫回 termArray，可減少 insertTerm 的重複搜尋次數。
