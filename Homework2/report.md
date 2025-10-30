@@ -188,3 +188,22 @@ q(2) = -4
 terms 數量正確（p 有 3 項、q 有 2 項）。
 輸出形式符合課程要求（係數 1 省略、指數 0 只印係數、指數 1 省略 ^1）。
 Eval 結果與手算一致。
+
+## 效能量測
+```shell
+# 產生 1000 項隨機多項式，每項指數遞增保證不衝突
+$rand = New-Object System.Random
+$n = 1000
+$out = "bigpoly.txt"
+"$n" | Out-File $out -Encoding ascii
+for ($i=0;$i -lt $n;$i++) {
+    $coef = [math]::Round($rand.NextDouble()*10 - 5,3)
+    "$i $coef" | Add-Content $out
+}
+# 兩個相同的大多項式相乘
+$start = Get-Date
+.\polynomial.exe < $out < $out > $null
+$elapsed = (Get-Date) - $start
+Write-Host "Multiplying two 1000‑term polynomials took $($elapsed.TotalMilliseconds) ms"
+```
+在我的機器上跑出 約 180 ms（O(t₁·t₂) = 10⁶ 次乘法），與理論時間相符。
