@@ -52,7 +52,7 @@ p(2) = 110
 ## 程式實作（關鍵程式碼）
 
 > 完整程式已上傳至  
-> https://github.com/jasonwang1211/NFU-DataStructure-Homework/blob/main/Homework3/Polynomial.cpp
+> [https://github.com/jasonwang1211/NFU-DataStructure-Homework/blob/main/Homework3/Polynomial.cpp](https://github.com/jasonwang1211/NFU-DataStructure-Homework/blob/main/Homework3/src/Polynomial.cpp)
 
 ```cpp
 // 1. ChainNode
