@@ -180,3 +180,29 @@ istream& operator>>(istream& is, Polynomial& x) {
 
 > **`t`、`t₁`、`t₂`** 分别代表多項式中非零項的個數。  
 > 本實作已達到多項式鏈結串列表示的理論最佳複雜度（加法線性、乘法二次），並透過 Available List 優化記憶體分配效率。
+## 測試與驗證
+```cpp
+int main() {
+    Polynomial p, q;
+    cout << "輸入第一個多項式 (coef exp 成對): ";
+    cin >> p;
+    cout << "輸入第二個多項式: ";
+    cin >> q;
+
+    cout << "p(x) = " << p << endl;
+    cout << "q(x) = " << q << endl;
+    cout << "p + q = " << (p + q) << endl;
+    cout << "p - q = " << (p - q) << endl;
+    cout << "p * q = " << (p * q) << endl;
+    cout << "p(2) = " << p.Evaluate(2) << endl;
+
+    // iterator 測試
+    cout << "\n使用 iterator 走訪 p 的每一項:\n";
+    for (Chain<int>::iterator it = p.terms.Begin(); it != p.terms.End(); ++it)
+        cout << (*it).first << "*x^" << (*it).second << " ";
+    cout << endl;
+
+    return 0;
+}
+```
+>已成功編譯通過（Visual Studio 2022 / g++），無任何警告與錯誤。
